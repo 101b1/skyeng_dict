@@ -22,30 +22,19 @@ constructor(private val searchService: SearchService) {
 
     fun getObservable(): Observable<SearchResult> = searchSubject
 
-    fun searchWord(query: String) {
+    fun searchWord(query: String, pageNumber: Int) {
         searchDisposable?.dispose()
-        if (hasMorePages){
-            var pageNumber = 1
-            if (query == currentQuery){
-                pageNumber = pagesDownloaded+1
-            } else{
-                currentQuery = query
-            }
-            searchDisposable = searchService.search(query, pageNumber)
-                .subscribeOn(Schedulers.io())
-                .subscribe(
-                    {
-                        if (it.isEmpty()){
-                            hasMorePages = false
-                        } else {
-                            pagesDownloaded +=1
-                            searchSubject.onNext(SearchSuccess(it))
-                        }
-                    },
-                    {
-                        searchSubject.onNext(SearchError(it.localizedMessage ?: "Server error"))
-                    }
-                )
-        }
+
+        searchDisposable = searchService.search(query, pageNumber)
+            .subscribeOn(Schedulers.io())
+            .subscribe(
+                {
+                    searchSubject.onNext(SearchSuccess(it))
+                },
+                {
+                    searchSubject.onNext(SearchError(it.localizedMessage ?: "Server error"))
+                }
+            )
     }
+
 }
