@@ -1,4 +1,4 @@
-package com.ilih.skyengdict.domain.data
+package com.ilih.skyengdict.data
 
 import com.ilih.skyengdict.domain.dto.SearchResultDto
 import io.reactivex.Single

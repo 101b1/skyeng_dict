@@ -1,6 +1,6 @@
 package com.ilih.skyengdict.domain.interactor
 
-import com.ilih.skyengdict.domain.data.SearchService
+import com.ilih.skyengdict.data.SearchService
 import com.ilih.skyengdict.domain.dto.SearchError
 import com.ilih.skyengdict.domain.dto.SearchResult
 import com.ilih.skyengdict.domain.dto.SearchSuccess

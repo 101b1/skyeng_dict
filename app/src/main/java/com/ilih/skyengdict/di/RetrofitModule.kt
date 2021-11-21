@@ -1,6 +1,6 @@
 package com.ilih.skyengdict.di
 
-import com.ilih.skyengdict.domain.data.SearchService
+import com.ilih.skyengdict.data.SearchService
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient

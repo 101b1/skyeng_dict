@@ -9,15 +9,15 @@ data class MeaningDto(
     @SerializedName("id")
     val id: Int,
     @SerializedName("partOfSpeechCode")
-    val partOfSpeechCode: String,
+    val partOfSpeechCode: String = "",
     @SerializedName("translation")
     val translation: TranslationDto,
     @SerializedName("previewUrl")
-    val previewUrl: String,
+    val previewUrl: String = "",
     @SerializedName("imageUrl")
-    val imageUrl: String,
+    val imageUrl: String = "",
     @SerializedName("transcription")
-    val transcription: String,
+    val transcription: String = "",
     @SerializedName("")
-    val soundUrl: String
+    val soundUrl: String = ""
 ) : Parcelable
