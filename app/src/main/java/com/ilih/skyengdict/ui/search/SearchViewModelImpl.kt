@@ -40,8 +40,9 @@ constructor(private val interactor: SearchInteractorImpl): ViewModel(), SearchVi
                 when(it){
                     is SearchSuccess ->{
                         if (it.results.isEmpty()){
-                            if (dataList.isEmpty())
+                            if (dataList.isEmpty()){
                                 _state.value = SearchNoResults
+                            }
                             else{
                                 hasMorePages = false
                                 _state.value = SearchSuccess
@@ -78,16 +79,15 @@ constructor(private val interactor: SearchInteractorImpl): ViewModel(), SearchVi
     }
 
     override fun search(query: String) {
+        if(currentQuery != query){
+            currentQuery = query
+            dataList.clear()
+            hasMorePages = true
+            pagesDownloaded = 0
+        }
         if (hasMorePages){
-            var pageNumber = 1
-            if (query == currentQuery){
-                pageNumber = pagesDownloaded + 1
-            } else{
-                currentQuery = query
-                dataList.clear()
-            }
             _state.value = SearchLoading
-            interactor.searchWord(query, pageNumber)
+            interactor.searchWord(query, pagesDownloaded + 1)
         }
     }
 }

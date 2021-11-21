@@ -23,7 +23,7 @@ class MeaningViewImpl(
                 Log.d("Skyeng", exception?.stackTraceToString() ?: "Error")
             }
         })
-        binding.textWord.text = meaning.text
+        binding.textWord.text = meaning.text+":"
         binding.recyclerMeanings.layoutManager = LinearLayoutManager(mainComponent.getContext(), RecyclerView.VERTICAL, false)
         binding.recyclerMeanings.adapter = MeaningsAdapter(ArrayList(meaning.meanings), picassoBuilder)
     }
