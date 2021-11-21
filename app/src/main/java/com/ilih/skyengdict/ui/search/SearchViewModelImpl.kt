@@ -1,4 +1,4 @@
-package com.ilih.skyengdict.ui
+package com.ilih.skyengdict.ui.search
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -7,7 +7,7 @@ import com.ilih.skyengdict.domain.dto.SearchError
 import com.ilih.skyengdict.domain.dto.SearchResult
 import com.ilih.skyengdict.domain.dto.SearchResultDto
 import com.ilih.skyengdict.domain.dto.SearchSuccess
-import com.ilih.skyengdict.domain.interactor.SearchInteractor
+import com.ilih.skyengdict.domain.interactor.SearchInteractorImpl
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -15,12 +15,13 @@ import javax.inject.Inject
 
 class SearchViewModelImpl
 @Inject
-constructor(private val interactor: SearchInteractor): ViewModel(), SearchViewModel, SearchView.Listener {
+constructor(private val interactor: SearchInteractorImpl): ViewModel(), SearchViewModel,
+    SearchView.Listener {
 
     private val _data = MutableLiveData<List<SearchResultDto>>()
     val data = _data
 
-    private val _state = MutableLiveData<SearchResult>()
+    private val _state = MutableLiveData<SearchState>()
     val state = _state
 
     private val dataList = mutableListOf<SearchResultDto>()
@@ -31,6 +32,7 @@ constructor(private val interactor: SearchInteractor): ViewModel(), SearchViewMo
     private val disposable: Disposable
 
     init {
+        _data.value = dataList
         disposable = interactor.getObservable()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -38,16 +40,21 @@ constructor(private val interactor: SearchInteractor): ViewModel(), SearchViewMo
                 when(it){
                     is SearchSuccess ->{
                         if (it.results.isEmpty()){
-                            hasMorePages = false
+                            if (dataList.isEmpty())
+                                _state.value = SearchNoResults
+                            else{
+                                hasMorePages = false
+                                _state.value = SearchSuccess
+                            }
                         } else {
                             pagesDownloaded +=1
                             dataList.addAll(it.results)
                             _data.value = dataList
-                            _state.value = it
+                            _state.value = SearchSuccess
                         }
                     }
                     is SearchError ->{
-                        _state.value = it
+                        _state.value = com.ilih.skyengdict.ui.search.SearchError(it.error)
                     }
                 }
             }
@@ -66,7 +73,7 @@ constructor(private val interactor: SearchInteractor): ViewModel(), SearchViewMo
         return data
     }
 
-    override fun getState(): LiveData<SearchResult> {
+    override fun getState(): LiveData<SearchState> {
         return state
     }
 
@@ -77,7 +84,9 @@ constructor(private val interactor: SearchInteractor): ViewModel(), SearchViewMo
                 pageNumber = pagesDownloaded + 1
             } else{
                 currentQuery = query
+                dataList.clear()
             }
+            _state.value = SearchLoading
             interactor.searchWord(query, pageNumber)
         }
     }

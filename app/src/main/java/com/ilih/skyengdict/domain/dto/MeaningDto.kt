@@ -1,20 +1,23 @@
 package com.ilih.skyengdict.domain.dto
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class MeaningDto(
     @SerializedName("id")
-    private val id: Int,
+    val id: Int,
     @SerializedName("partOfSpeechCode")
-    private val partOfSpeechCode: String,
+    val partOfSpeechCode: String,
     @SerializedName("translation")
-    private val translation: TranslationDto,
+    val translation: TranslationDto,
     @SerializedName("previewUrl")
-    private val previewUrl: String,
+    val previewUrl: String,
     @SerializedName("imageUrl")
-    private val imageUrl: String,
+    val imageUrl: String,
     @SerializedName("transcription")
-    private val transcription: String,
+    val transcription: String,
     @SerializedName("")
-    private val soundUrl: String
-)
+    val soundUrl: String
+) : Parcelable

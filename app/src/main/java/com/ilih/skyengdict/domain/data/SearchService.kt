@@ -7,13 +7,13 @@ import retrofit2.http.Query
 
 interface SearchService {
 
-    @GET("search")
+    @GET("words/search")
     fun search(
         @Query("search")
         query: String,
         @Query("page")
         pageNumber: Int,
         @Query("pageSize")
-        pageSize: Int = 10
+        pageSize: Int = 30
     ): Single<List<SearchResultDto>>
 }

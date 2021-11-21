@@ -1,12 +1,15 @@
 package com.ilih.skyengdict.domain.dto
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class SearchResultDto(
     @SerializedName("id")
-    private val id: Int,
+    val id: Int,
     @SerializedName("text")
-    private val text: String,
+    val text: String,
     @SerializedName("meanings")
-    private val meanings: List<MeaningDto>
-)
+    val meanings: List<MeaningDto>
+) : Parcelable
