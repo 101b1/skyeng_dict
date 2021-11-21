@@ -1,14 +1,9 @@
 package com.ilih.skyengdict
 
 import com.ilih.skyengdict.data.SearchService
-import com.ilih.skyengdict.domain.dto.MeaningDto
-import com.ilih.skyengdict.domain.dto.SearchResultDto
-import com.ilih.skyengdict.domain.dto.SearchSuccess
-import com.ilih.skyengdict.domain.dto.TranslationDto
+import com.ilih.skyengdict.domain.dto.*
 import com.ilih.skyengdict.domain.interactor.SearchInteractorImpl
-import io.reactivex.Scheduler
 import io.reactivex.Single
-import io.reactivex.schedulers.Schedulers
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -61,7 +56,21 @@ class SearchInteractorImplTest {
         interactor.getObservable()
             .test()
             .assertNoErrors()
-            .assertResult(expectedResult)
+            .assertValue(expectedResult)
+    }
+
+    @Test
+    fun testReturnSearchError() {
+        val expectedResult = SearchError("error")
+        Mockito.`when`(service.search("apple", 1))
+            .thenReturn(Single.error(RuntimeException("error")))
+
+        interactor.searchWord("apple", 1)
+
+        interactor.getObservable()
+            .test()
+            .assertNoErrors()
+            .assertValue(expectedResult)
     }
 
 }
